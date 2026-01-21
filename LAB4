@@ -1,0 +1,31 @@
+WRITE A PROGRAM TO FIND THE FACTORIAL OF A NUMBER BY RECURSSIVE METHOD
+#include <stdio.h>
+
+long long fact(int n)
+{
+    if (n == 0 || n == 1)
+        return 1;
+    else
+        return n * fact(n - 1);
+}
+
+int main()
+{
+    int n;
+    long long result;
+
+    printf("Enter a number: ");
+    scanf("%d", &n);
+
+    if (n < 0)
+    {
+        printf("Factorial is not defined for negative numbers\n");
+    }
+    else
+    {
+        result = fact(n);
+        printf("Factorial of %d = %lld\n", n, result);
+    }
+
+    return 0;
+}
