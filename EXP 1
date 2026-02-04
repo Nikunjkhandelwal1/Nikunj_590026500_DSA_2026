@@ -101,5 +101,235 @@ return 0;
 (4)  Write a C program to find the largest and smallest elements of an array.
 #include <stdio.h>
 
+int main() {
+    int n, i;
+
+    scanf("%d", &n);
+
+    int arr[n];
+    for (i = 0; i < n; i++) {
+        scanf("%d", &arr[i]);
+    }
+
+    int smallest = arr[0];
+    int largest = arr[0];
+
+    for (i = 1; i < n; i++) {
+        if (arr[i] < smallest)
+            smallest = arr[i];
+        if (arr[i] > largest)
+            largest = arr[i];
+    }
+
+    printf("Smallest = %d\n", smallest);
+    printf("Largest = %d\n", largest);
+
+    return 0;
+}
+
+(5) Write a C program using structure and dynamic memory allocation to store and display student details such as roll number, name, and marks.
+
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Student {
+    int roll;
+    char name[50];
+    float marks;
+};
+
+int main() {
+    int n, i;
+    struct Student *s;
+
+    scanf("%d", &n);
+
+    s = (struct Student *)malloc(n * sizeof(struct Student));
+    if (s == NULL) {
+        return 1;
+    }
+
+    for (i = 0; i < n; i++) {
+        scanf("%d", &s[i].roll);
+        scanf("%s", s[i].name);
+        scanf("%f", &s[i].marks);
+    }
+
+    for (i = 0; i < n; i++) {
+        printf("Roll: %d\n", s[i].roll);
+        printf("Name: %s\n", s[i].name);
+        printf("Marks: %.2f\n", s[i].marks);
+    }
+
+    free(s);
+    return 0;
+}
+
+(6) Write a C program using array of structures with dynamic memory allocation to store employee details and find the employee with the highest salary.
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Employee {
+    int id;
+    char name[50];
+    float salary;
+};
+
+int main() {
+    int n, i, maxIndex = 0;
+    struct Employee *e;
+
+    scanf("%d", &n);
+
+    e = (struct Employee *)malloc(n * sizeof(struct Employee));
+    if (e == NULL) {
+        return 1;
+    }
+
+    for (i = 0; i < n; i++) {
+        scanf("%d", &e[i].id);
+        scanf("%s", e[i].name);
+        scanf("%f", &e[i].salary);
+    }
+
+    for (i = 1; i < n; i++) {
+        if (e[i].salary > e[maxIndex].salary) {
+            maxIndex = i;
+        }
+    }
+
+    printf("Employee with highest salary:\n");
+    printf("ID: %d\n", e[maxIndex].id);
+    printf("Name: %s\n", e[maxIndex].name);
+    printf("Salary: %.2f\n", e[maxIndex].salary);
+
+    free(e);
+    return 0;
+}
+
+(7) Write a menu-driven C program using structure and dynamic memory allocation to add, display, delete records and free memory before exit.
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Record {
+    int id;
+    char name[50];
+};
+
+int main() {
+    struct Record *r = NULL;
+    int choice, count = 0, i, pos;
+
+    while (1) {
+        printf("\n1.Add\n2.Display\n3.Delete\n4.Exit\n");
+        scanf("%d", &choice);
+
+        if (choice == 1) {
+            r = (struct Record *)realloc(r, (count + 1) * sizeof(struct Record));
+            if (r == NULL) {
+                return 1;
+            }
+            scanf("%d", &r[count].id);
+            scanf("%s", r[count].name);
+            count++;
+        }
+        else if (choice == 2) {
+            for (i = 0; i < count; i++) {
+                printf("ID: %d Name: %s\n", r[i].id, r[i].name);
+            }
+        }
+        else if (choice == 3) {
+            scanf("%d", &pos);
+            if (pos >= 1 && pos <= count) {
+                for (i = pos - 1; i < count - 1; i++) {
+                    r[i] = r[i + 1];
+                }
+                count--;
+                if (count > 0) {
+                    r = (struct Record *)realloc(r, count * sizeof(struct Record));
+                } else {
+                    free(r);
+                    r = NULL;
+                }
+            }
+        }
+        else if (choice == 4) {
+            free(r);
+            break;
+        }
+    }
+    return 0;
+}
+
+(8) Write a C program to demonstrate the use of union by storing integer, float, and character data and explain memory sharing.
+#include <stdio.h>
+
+union Data {
+    int i;
+    float f;
+    char c;
+};
+
+int main() {
+    union Data d;
+
+    d.i = 10;
+    printf("Integer: %d\n", d.i);
+
+    d.f = 25.5;
+    printf("Float: %.1f\n", d.f);
+
+    d.c = 'A';
+    printf("Character: %c\n", d.c);
+
+    return 0;
+}
+
+
+(9) Write a C program to show the difference in memory allocation between structure and union using sizeof().
+#include <stdio.h>
+
+struct SampleStruct {
+    int i;
+    float f;
+    char c;
+};
+
+union SampleUnion {
+    int i;
+    float f;
+    char c;
+};
+
+int main() {
+    printf("Size of structure = %lu bytes\n", sizeof(struct SampleStruct));
+    printf("Size of union = %lu bytes\n", sizeof(union SampleUnion));
+    return 0;
+}
+
+
+(10) Write a C program to show the difference in memory allocation between structure and union using sizeof().
+#include <stdio.h>
+
+struct SampleStruct {
+    int a;
+    float b;
+    char c;
+};
+
+union SampleUnion {
+    int a;
+    float b;
+    char c;
+};
+
+int main() {
+    printf("Size of structure = %lu bytes\n", sizeof(struct SampleStruct));
+    printf("Size of union = %lu bytes\n", sizeof(union SampleUnion));
+    return 0;
+}
+
+
+
 
 
