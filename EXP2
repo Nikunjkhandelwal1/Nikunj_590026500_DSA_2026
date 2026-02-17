@@ -1,0 +1,347 @@
+1. Write a C program to traverse a singly linked list and count the number of nodes present
+in the list.
+
+#include <stdio.h>
+#include <stdlib.h>
+
+struct node
+{
+    int data;
+    struct node *next;
+};
+
+int main()
+{
+    struct node *head = NULL;
+    struct node *n1, *n2;
+    int count = 0;
+
+    n1 = (struct node*)malloc(sizeof(struct node));
+    n2 = (struct node*)malloc(sizeof(struct node));
+
+    n1->data = 10;
+    n1->next = n2;
+
+    n2->data = 20;
+    n2->next = NULL;
+
+    head = n1;
+
+    struct node *ptr = head;
+
+    while(ptr != NULL)
+    {
+        count++;
+        ptr = ptr->next;
+    }
+
+    printf("Total nodes = %d", count);
+
+    return 0;
+}
+
+
+2. Write a C program to implement a singly linked list and search for a given element in the
+list. If the element is found, display the position of the element in the linked list; otherwise,
+display element does not exit.
+
+#include <stdio.h>
+#include <stdlib.h>
+
+struct node
+{
+    int data;
+    struct node *next;
+};
+
+int main()
+{
+    struct node *head = NULL, *temp, *newnode;
+    int n, i, value, pos = 1, found = 0;
+
+    printf("Enter number of nodes: ");
+    scanf("%d", &n);
+
+    for(i = 0; i < n; i++)
+    {
+        newnode = (struct node*)malloc(sizeof(struct node));
+        printf("Enter data: ");
+        scanf("%d", &newnode->data);
+        newnode->next = NULL;
+
+        if(head == NULL)
+        {
+            head = newnode;
+            temp = newnode;
+        }
+        else
+        {
+            temp->next = newnode;
+            temp = newnode;
+        }
+    }
+
+    printf("Enter element to search: ");
+    scanf("%d", &value);
+
+    temp = head;
+
+    while(temp != NULL)
+    {
+        if(temp->data == value)
+        {
+            found = 1;
+            printf("Element found at position %d", pos);
+            break;
+        }
+        temp = temp->next;
+        pos++;
+    }
+
+    if(found == 0)
+    {
+        printf("Element does not exist");
+    }
+
+    return 0;
+}
+
+3. Write a C program to implement insertion operations in a singly linked list. The program
+should perform the following operations:
+ Insert a new element at the beginning of the linked list.
+ Insert a new element at the end of the linked list.
+ Insert a new element after a given node in the linked list.
+
+#include <stdio.h>
+#include <stdlib.h>
+
+struct node
+{
+    int data;
+    struct node *next;
+};
+
+struct node *head = NULL;
+
+void insert_begin(int value)
+{
+    struct node *newnode;
+    newnode = (struct node*)malloc(sizeof(struct node));
+
+    newnode->data = value;
+    newnode->next = head;
+    head = newnode;
+}
+
+void insert_end(int value)
+{
+    struct node *newnode, *temp;
+    newnode = (struct node*)malloc(sizeof(struct node));
+
+    newnode->data = value;
+    newnode->next = NULL;
+
+    if(head == NULL)
+    {
+        head = newnode;
+    }
+    else
+    {
+        temp = head;
+        while(temp->next != NULL)
+        {
+            temp = temp->next;
+        }
+        temp->next = newnode;
+    }
+}
+
+void insert_after(int key, int value)
+{
+    struct node *temp;
+    temp = head;
+
+    while(temp != NULL && temp->data != key)
+    {
+        temp = temp->next;
+    }
+
+    if(temp == NULL)
+    {
+        printf("Given node not found\n");
+    }
+    else
+    {
+        struct node *newnode;
+        newnode = (struct node*)malloc(sizeof(struct node));
+
+        newnode->data = value;
+        newnode->next = temp->next;
+        temp->next = newnode;
+    }
+}
+
+void display()
+{
+    struct node *temp = head;
+    while(temp != NULL)
+    {
+        printf("%d -> ", temp->data);
+        temp = temp->next;
+    }
+    printf("NULL\n");
+}
+
+int main()
+{
+    insert_begin(10);
+    insert_begin(5);
+
+    insert_end(20);
+    insert_end(30);
+
+    insert_after(20, 25);
+
+    display();
+
+    return 0;
+}
+
+
+4. Write a C program to implement deletion operations on a singly linked list. The program
+  should support deleting an element from:
+ The beginning of the linked list
+ The end of the linked list
+ After a given node (specified by its value)
+
+#include <stdio.h>
+#include <stdlib.h>
+
+struct node
+{
+    int data;
+    struct node *next;
+};
+
+struct node *head = NULL;
+
+void delete_begin()
+{
+    struct node *temp;
+
+    if(head == NULL)
+    {
+        printf("List is empty\n");
+        return;
+    }
+
+    temp = head;
+    head = head->next;
+    free(temp);
+}
+
+void delete_end()
+{
+    struct node *temp, *prev;
+
+    if(head == NULL)
+    {
+        printf("List is empty\n");
+        return;
+    }
+
+    if(head->next == NULL)
+    {
+        free(head);
+        head = NULL;
+        return;
+    }
+
+    temp = head;
+
+    while(temp->next != NULL)
+    {
+        prev = temp;
+        temp = temp->next;
+    }
+
+    prev->next = NULL;
+    free(temp);
+}
+
+void delete_after(int value)
+{
+    struct node *temp = head;
+
+    while(temp != NULL && temp->data != value)
+    {
+        temp = temp->next;
+    }
+
+    if(temp == NULL || temp->next == NULL)
+    {
+        printf("Deletion not possible\n");
+        return;
+    }
+
+    struct node *del = temp->next;
+    temp->next = del->next;
+    free(del);
+}
+
+void display()
+{
+    struct node *temp = head;
+
+    while(temp != NULL)
+    {
+        printf("%d -> ", temp->data);
+        temp = temp->next;
+    }
+    printf("NULL\n");
+}
+
+void insert_end(int value)
+{
+    struct node *newnode, *temp;
+
+    newnode = (struct node*)malloc(sizeof(struct node));
+    newnode->data = value;
+    newnode->next = NULL;
+
+    if(head == NULL)
+    {
+        head = newnode;
+        return;
+    }
+
+    temp = head;
+    while(temp->next != NULL)
+    {
+        temp = temp->next;
+    }
+
+    temp->next = newnode;
+}
+
+int main()
+{
+    insert_end(10);
+    insert_end(20);
+    insert_end(30);
+    insert_end(40);
+
+    display();
+
+    delete_begin();
+    display();
+
+    delete_end();
+    display();
+
+    delete_after(20);
+    display();
+
+    return 0;
+}
+
