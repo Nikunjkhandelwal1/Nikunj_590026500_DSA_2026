@@ -345,3 +345,855 @@ int main()
     return 0;
 }
 
+5. Write a C program to reverse the data of the nodes of a singly linked list without changing 
+the links between the nodes
+
+#include <stdio.h>
+#include <stdlib.h>
+
+struct node
+{
+    int data;
+    struct node *next;
+};
+
+struct node *start = NULL;
+
+// Insert at End (Create List)
+void insert_end(int val)
+{
+    struct node *newnode, *ptr;
+
+    newnode = (struct node*)malloc(sizeof(struct node));
+    newnode->data = val;
+    newnode->next = NULL;
+
+    if(start == NULL)
+        start = newnode;
+    else
+    {
+        ptr = start;
+        while(ptr->next != NULL)
+            ptr = ptr->next;
+
+        ptr->next = newnode;
+    }
+}
+
+// Count Nodes
+int count_nodes()
+{
+    int count = 0;
+    struct node *ptr = start;
+
+    while(ptr != NULL)
+    {
+        count++;
+        ptr = ptr->next;
+    }
+    return count;
+}
+
+// Reverse Data Only
+void reverse_data()
+{
+    int arr[100], i = 0, n;
+    struct node *ptr = start;
+
+    n = count_nodes();
+
+    // Store data in array
+    while(ptr != NULL)
+    {
+        arr[i++] = ptr->data;
+        ptr = ptr->next;
+    }
+
+    // Replace data in reverse order
+    ptr = start;
+    i = n - 1;
+
+    while(ptr != NULL)
+    {
+        ptr->data = arr[i--];
+        ptr = ptr->next;
+    }
+}
+
+// Display List
+void display()
+{
+    struct node *ptr = start;
+
+    while(ptr != NULL)
+    {
+        printf("%d -> ", ptr->data);
+        ptr = ptr->next;
+    }
+    printf("NULL\n");
+}
+
+void main()
+{
+    insert_end(1);
+    insert_end(2);
+    insert_end(3);
+    insert_end(4);
+
+    printf("Original List:\n");
+    display();
+
+    reverse_data();
+
+    printf("After Reversing Data:\n");
+    display();
+}
+
+
+
+
+
+6. Write a C program to implement a Circular Singly Linked List and perform all basic 
+   operations on it. The program must support the following operations: 
+   Creation of a Circular Linked List 
+    Insertion of a node (At the beginning and at the end of the list) 
+    Deletion of a node (From the beginning and from the end of the list) 
+    Traversal and display of the circular linked list and counting the number of 
+     nodes in the list.
+
+
+#include <stdio.h>
+#include <stdlib.h>
+
+struct node
+{
+    int data;
+    struct node *next;
+};
+
+struct node *last = NULL;   // Using last pointer
+
+// Insert at End (Creation)
+void insert_end(int val)
+{
+    struct node *newnode;
+    newnode = (struct node*)malloc(sizeof(struct node));
+    newnode->data = val;
+
+    if(last == NULL)
+    {
+        last = newnode;
+        last->next = last;   // Circular link
+    }
+    else
+    {
+        newnode->next = last->next;
+        last->next = newnode;
+        last = newnode;
+    }
+}
+
+// Insert at Beginning
+void insert_begin(int val)
+{
+    struct node *newnode;
+    newnode = (struct node*)malloc(sizeof(struct node));
+    newnode->data = val;
+
+    if(last == NULL)
+    {
+        last = newnode;
+        last->next = last;
+    }
+    else
+    {
+        newnode->next = last->next;
+        last->next = newnode;
+    }
+}
+
+// Delete from Beginning
+void delete_begin()
+{
+    struct node *temp;
+
+    if(last == NULL)
+    {
+        printf("List is empty\n");
+        return;
+    }
+
+    temp = last->next;
+
+    if(last == temp)   // Only one node
+    {
+        last = NULL;
+    }
+    else
+    {
+        last->next = temp->next;
+    }
+
+    free(temp);
+}
+
+// Delete from End
+void delete_end()
+{
+    struct node *ptr, *temp;
+
+    if(last == NULL)
+    {
+        printf("List is empty\n");
+        return;
+    }
+
+    temp = last;
+
+    if(last->next == last)   // Only one node
+    {
+        last = NULL;
+        free(temp);
+        return;
+    }
+
+    ptr = last->next;
+    while(ptr->next != last)
+        ptr = ptr->next;
+
+    ptr->next = last->next;
+    free(last);
+    last = ptr;
+}
+
+// Display and Count
+void display_count()
+{
+    struct node *ptr;
+    int count = 0;
+
+    if(last == NULL)
+    {
+        printf("List is empty\n");
+        return;
+    }
+
+    ptr = last->next;
+
+    do
+    {
+        printf("%d -> ", ptr->data);
+        count++;
+        ptr = ptr->next;
+    } while(ptr != last->next);
+
+    printf("(Back to Start)\n");
+    printf("Total nodes = %d\n", count);
+}
+
+void main()
+{
+    insert_end(10);
+    insert_end(20);
+    insert_end(30);
+
+    insert_begin(5);
+
+    printf("List:\n");
+    display_count();
+
+    delete_begin();
+    delete_end();
+
+    printf("After Deletion:\n");
+    display_count();
+}
+
+
+
+7. Write a C program to implement a Doubly Linked List. The program should perform all 
+basic operations on the list. The program must support the following operations: 
+ Creation of a Doubly Linked List, display and counting the number of nodes 
+ Insertion of a node (At the beginning, At the end, After a given node) 
+ Deletion of a node (From the beginning, From the end, of a given node) 
+ Traversal of the list (Forward traversal and Backward traversal) 
+
+#include <stdio.h>
+#include <stdlib.h>
+
+struct node
+{
+    int data;
+    struct node *prev;
+    struct node *next;
+};
+
+struct node *start = NULL;
+
+// Insert at End (Creation)
+void insert_end(int val)
+{
+    struct node *newnode, *ptr;
+
+    newnode = (struct node*)malloc(sizeof(struct node));
+    newnode->data = val;
+    newnode->next = NULL;
+
+    if(start == NULL)
+    {
+        newnode->prev = NULL;
+        start = newnode;
+    }
+    else
+    {
+        ptr = start;
+        while(ptr->next != NULL)
+            ptr = ptr->next;
+
+        ptr->next = newnode;
+        newnode->prev = ptr;
+    }
+}
+
+// Insert at Beginning
+void insert_begin(int val)
+{
+    struct node *newnode;
+
+    newnode = (struct node*)malloc(sizeof(struct node));
+    newnode->data = val;
+    newnode->prev = NULL;
+    newnode->next = start;
+
+    if(start != NULL)
+        start->prev = newnode;
+
+    start = newnode;
+}
+
+// Insert After Given Node
+void insert_after(int key, int val)
+{
+    struct node *ptr = start;
+
+    while(ptr != NULL && ptr->data != key)
+        ptr = ptr->next;
+
+    if(ptr == NULL)
+    {
+        printf("Node not found\n");
+        return;
+    }
+
+    struct node *newnode;
+    newnode = (struct node*)malloc(sizeof(struct node));
+    newnode->data = val;
+
+    newnode->next = ptr->next;
+    newnode->prev = ptr;
+
+    if(ptr->next != NULL)
+        ptr->next->prev = newnode;
+
+    ptr->next = newnode;
+}
+
+// Delete from Beginning
+void delete_begin()
+{
+    struct node *temp;
+
+    if(start == NULL)
+    {
+        printf("List empty\n");
+        return;
+    }
+
+    temp = start;
+    start = start->next;
+
+    if(start != NULL)
+        start->prev = NULL;
+
+    free(temp);
+}
+
+// Delete from End
+void delete_end()
+{
+    struct node *ptr;
+
+    if(start == NULL)
+    {
+        printf("List empty\n");
+        return;
+    }
+
+    ptr = start;
+    while(ptr->next != NULL)
+        ptr = ptr->next;
+
+    if(ptr->prev != NULL)
+        ptr->prev->next = NULL;
+    else
+        start = NULL;
+
+    free(ptr);
+}
+
+// Delete Given Node
+void delete_node(int key)
+{
+    struct node *ptr = start;
+
+    while(ptr != NULL && ptr->data != key)
+        ptr = ptr->next;
+
+    if(ptr == NULL)
+    {
+        printf("Node not found\n");
+        return;
+    }
+
+    if(ptr->prev != NULL)
+        ptr->prev->next = ptr->next;
+    else
+        start = ptr->next;
+
+    if(ptr->next != NULL)
+        ptr->next->prev = ptr->prev;
+
+    free(ptr);
+}
+
+// Forward Traversal and Count
+void display_forward()
+{
+    struct node *ptr = start;
+    int count = 0;
+
+    while(ptr != NULL)
+    {
+        printf("%d <-> ", ptr->data);
+        count++;
+        ptr = ptr->next;
+    }
+    printf("NULL\n");
+    printf("Total nodes = %d\n", count);
+}
+
+// Backward Traversal
+void display_backward()
+{
+    struct node *ptr = start;
+
+    if(ptr == NULL)
+    {
+        printf("List empty\n");
+        return;
+    }
+
+    while(ptr->next != NULL)
+        ptr = ptr->next;
+
+    while(ptr != NULL)
+    {
+        printf("%d <-> ", ptr->data);
+        ptr = ptr->prev;
+    }
+    printf("NULL\n");
+}
+
+void main()
+{
+    insert_end(10);
+    insert_end(20);
+    insert_end(30);
+
+    insert_begin(5);
+    insert_after(20, 25);
+
+    printf("Forward Traversal:\n");
+    display_forward();
+
+    printf("Backward Traversal:\n");
+    display_backward();
+
+    delete_begin();
+    delete_end();
+    delete_node(20);
+
+    printf("After Deletion:\n");
+    display_forward();
+}
+
+
+
+
+
+8.Write a C program to implement a Doubly Circular Linked List. The program should 
+perform all basic operations on the list. The program must support the following 
+operations: 
+ Creation of a Doubly Circular Linked List, display and counting the number of 
+nodes 
+ Insertion of a node (At the beginning, At the end) 
+ Deletion of a node (From the beginning, From the end)
+
+#include <stdio.h>
+#include <stdlib.h>
+
+struct node
+{
+    int data;
+    struct node *prev;
+    struct node *next;
+};
+
+struct node *start = NULL;
+
+// Insert at End (Creation)
+void insert_end(int val)
+{
+    struct node *newnode, *last;
+
+    newnode = (struct node*)malloc(sizeof(struct node));
+    newnode->data = val;
+
+    if(start == NULL)
+    {
+        newnode->next = newnode;
+        newnode->prev = newnode;
+        start = newnode;
+    }
+    else
+    {
+        last = start->prev;
+
+        newnode->next = start;
+        newnode->prev = last;
+
+        last->next = newnode;
+        start->prev = newnode;
+    }
+}
+
+// Insert at Beginning
+void insert_begin(int val)
+{
+    insert_end(val);          // Insert at end first
+    start = start->prev;      // Move start to new node
+}
+
+// Delete from Beginning
+void delete_begin()
+{
+    struct node *temp, *last;
+
+    if(start == NULL)
+    {
+        printf("List is empty\n");
+        return;
+    }
+
+    if(start->next == start)
+    {
+        free(start);
+        start = NULL;
+        return;
+    }
+
+    temp = start;
+    last = start->prev;
+
+    start = start->next;
+    start->prev = last;
+    last->next = start;
+
+    free(temp);
+}
+
+// Delete from End
+void delete_end()
+{
+    struct node *last, *prevnode;
+
+    if(start == NULL)
+    {
+        printf("List is empty\n");
+        return;
+    }
+
+    if(start->next == start)
+    {
+        free(start);
+        start = NULL;
+        return;
+    }
+
+    last = start->prev;
+    prevnode = last->prev;
+
+    prevnode->next = start;
+    start->prev = prevnode;
+
+    free(last);
+}
+
+// Display and Count
+void display_count()
+{
+    struct node *ptr;
+    int count = 0;
+
+    if(start == NULL)
+    {
+        printf("List is empty\n");
+        return;
+    }
+
+    ptr = start;
+
+    do
+    {
+        printf("%d <-> ", ptr->data);
+        count++;
+        ptr = ptr->next;
+    } while(ptr != start);
+
+    printf("(Back to Start)\n");
+    printf("Total nodes = %d\n", count);
+}
+
+void main()
+{
+    insert_end(10);
+    insert_end(20);
+    insert_end(30);
+
+    insert_begin(5);
+
+    printf("List:\n");
+    display_count();
+
+    delete_begin();
+    delete_end();
+
+    printf("After Deletion:\n");
+    display_count();
+}
+
+
+
+9.Write a C program to represent and evaluate a Polynomial using a Linked List. Each node 
+should represent a term containing coefficient and exponent.
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+
+struct node
+{
+    int coef;
+    int exp;
+    struct node *next;
+};
+
+struct node *start = NULL;
+
+// Insert term at end
+void insert_term(int c, int e)
+{
+    struct node *newnode, *ptr;
+
+    newnode = (struct node*)malloc(sizeof(struct node));
+    newnode->coef = c;
+    newnode->exp = e;
+    newnode->next = NULL;
+
+    if(start == NULL)
+        start = newnode;
+    else
+    {
+        ptr = start;
+        while(ptr->next != NULL)
+            ptr = ptr->next;
+
+        ptr->next = newnode;
+    }
+}
+
+// Display Polynomial
+void display()
+{
+    struct node *ptr = start;
+
+    while(ptr != NULL)
+    {
+        printf("%dx^%d", ptr->coef, ptr->exp);
+        if(ptr->next != NULL)
+            printf(" + ");
+        ptr = ptr->next;
+    }
+    printf("\n");
+}
+
+// Evaluate Polynomial
+void evaluate(int x)
+{
+    struct node *ptr = start;
+    int result = 0;
+
+    while(ptr != NULL)
+    {
+        result += ptr->coef * pow(x, ptr->exp);
+        ptr = ptr->next;
+    }
+
+    printf("Value of Polynomial = %d\n", result);
+}
+
+void main()
+{
+    // Example Polynomial: 4x^3 + 3x^2 + 2x + 1
+    insert_term(4, 3);
+    insert_term(3, 2);
+    insert_term(2, 1);
+    insert_term(1, 0);
+
+    printf("Polynomial:\n");
+    display();
+
+    evaluate(2);   // Evaluate for x = 2
+}
+
+
+
+10. Write a C program to maintain Student Records using a Linked List. Each node should 
+store student details such as roll number, name, and marks. Implement operations to insert, 
+delete, search, and display records. 
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+struct student
+{
+    int roll;
+    char name[50];
+    float marks;
+    struct student *next;
+};
+
+struct student *start = NULL;
+
+// Insert Student (at end)
+void insert_student(int r, char n[], float m)
+{
+    struct student *newnode, *ptr;
+
+    newnode = (struct student*)malloc(sizeof(struct student));
+
+    newnode->roll = r;
+    strcpy(newnode->name, n);
+    newnode->marks = m;
+    newnode->next = NULL;
+
+    if(start == NULL)
+        start = newnode;
+    else
+    {
+        ptr = start;
+        while(ptr->next != NULL)
+            ptr = ptr->next;
+
+        ptr->next = newnode;
+    }
+
+    printf("Record Inserted Successfully\n");
+}
+
+// Display Records
+void display()
+{
+    struct student *ptr = start;
+
+    if(ptr == NULL)
+    {
+        printf("No records available\n");
+        return;
+    }
+
+    while(ptr != NULL)
+    {
+        printf("\nRoll No: %d\n", ptr->roll);
+        printf("Name   : %s\n", ptr->name);
+        printf("Marks  : %.2f\n", ptr->marks);
+        ptr = ptr->next;
+    }
+}
+
+// Search Record
+void search(int key)
+{
+    struct student *ptr = start;
+
+    while(ptr != NULL)
+    {
+        if(ptr->roll == key)
+        {
+            printf("\nRecord Found\n");
+            printf("Roll No: %d\n", ptr->roll);
+            printf("Name   : %s\n", ptr->name);
+            printf("Marks  : %.2f\n", ptr->marks);
+            return;
+        }
+        ptr = ptr->next;
+    }
+
+    printf("Record not found\n");
+}
+
+// Delete Record
+void delete_student(int key)
+{
+    struct student *ptr = start, *prev = NULL;
+
+    while(ptr != NULL && ptr->roll != key)
+    {
+        prev = ptr;
+        ptr = ptr->next;
+    }
+
+    if(ptr == NULL)
+    {
+        printf("Record not found\n");
+        return;
+    }
+
+    if(prev == NULL)
+        start = ptr->next;
+    else
+        prev->next = ptr->next;
+
+    free(ptr);
+    printf("Record Deleted Successfully\n");
+}
+
+void main()
+{
+    insert_student(1, "Rahul", 85.5);
+    insert_student(2, "Anjali", 92.0);
+    insert_student(3, "Amit", 78.0);
+
+    printf("\nStudent Records:\n");
+    display();
+
+    search(2);
+
+    delete_student(1);
+
+    printf("\nAfter Deletion:\n");
+    display();
+}
+
+
